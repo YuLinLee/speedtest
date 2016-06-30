@@ -50,11 +50,6 @@ typedef struct server_data {
     struct sockaddr_in servinfo;
 } server_data_t;
 
-typedef struct task_data {
-    char domain_name[128];
-    char request_url[128];
-} task_data_t;
-
 typedef struct thread {
     int thread_index;
     int running;                                                                                                              
@@ -536,7 +531,7 @@ void *upload_thread(void *arg) {
             "POST /%s HTTP/1.0\r\n"
             "Content-type: application/x-www-form-urlencoded\r\n"
             "Host: %s\r\n"
-            "Content-Length: %d\r\n\r\n", thread[i].request_url, thread[i].domain_name, sizeof(data)*UL_BUFFER_TIMES);
+            "Content-Length: %ld\r\n\r\n", thread[i].request_url, thread[i].domain_name, sizeof(data)*UL_BUFFER_TIMES);
 
     if((size=send(fd, sbuf, strlen(sbuf), 0)) != strlen(sbuf)) {
         printf("Can't send header to server\n");
