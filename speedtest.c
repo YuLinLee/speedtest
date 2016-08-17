@@ -15,7 +15,7 @@
 #define CONFIG_REQUEST_URL "speedtest-config.php"
 
 #define SPEEDTEST_SERVERS_DOMAIN_NAME "c.speedtest.net"
-#define SERVERS_LOCATION_REQUEST_URL "speedtest-servers-static.php"
+#define SERVERS_LOCATION_REQUEST_URL "speedtest-servers-static.php?"
 
 #define FILE_DIRECTORY_PATH "/tmp/"
 #define NEAREST_SERVERS_NUM 5
@@ -235,10 +235,13 @@ int get_nearest_server(double lat_c, double lon_c, server_data_t *nearest_server
                     }
                 }
                 count++;
-            }
+            } 
         }
     }
-    return 1;
+    if(count>0)
+        return 1;
+    else 
+        return 0;
 }
 
 int get_best_server(server_data_t *nearest_servers) {
@@ -635,7 +638,10 @@ int main() {
     printf("Your ISP        : %s\n", client_data.isp);
     printf("============================================\n");
 
-    get_nearest_server(client_data.latitude, client_data.longitude, nearest_servers);
+    if(get_nearest_server(client_data.latitude, client_data.longitude, nearest_servers)==0) {
+        printf("Can't get server list.\n"); 
+        return 0;
+    }
     if((best_server_index = get_best_server(nearest_servers))!=-1) {
         printf("==========The best server information==========\n");
         printf("URL: %s\n", nearest_servers[best_server_index].url);
